@@ -1,0 +1,90 @@
+function miProgramaPrincipal() {
+  let productos = [
+    { id: 2, nombre: "pelota de futbol", categoria: "deportes", stock: 2, precio: 5000, rutaImagen: "pelota-futbol.jpg" },
+    { id: 5, nombre: "gorra 1", categoria: "indumentaria", stock: 7, precio: 2650, rutaImagen: "gorra.jpg" },
+    { id: 7, nombre: "remera mangas cortas", categoria: "indumentaria", stock: 4, precio: 4500, rutaImagen: "remera.jpg" },
+    { id: 9, nombre: "pelota de voley", categoria: "deportes", stock: 1, precio: 2800, rutaImagen: "pelota-voley.jpg" },
+    { id: 12, nombre: "remera mangas largas", categoria: "indumentaria", stock: 3, precio: 7300, rutaImagen: "remera-ml.jpeg" },
+    { id: 15, nombre: "short de basquet", categoria: "basquet", stock: 8, precio: 5600, rutaImagen: "short.jpg" },
+    { id: 17, nombre: "gorra 2", categoria: "otros", stock: 7, precio: 2650, rutaImagen: "gorra2.jpg" },
+  ]
+
+  let contenedorFiltros = document.getElementById("filtros")
+
+  let buscador = document.getElementById("buscador")
+  buscador.addEventListener("input", () => filtrar(productos))
+
+  /* OPCION 1 
+  let botonesFiltros = document.getElementsByClassName("filtro")
+  for (const botonFiltro of botonesFiltros) {
+    botonFiltro.addEventListener("click", filtrarPorCategoria)
+  } */
+
+  crearFiltros(productos, contenedorFiltros)
+  crearTarjetas(productos)
+}
+
+miProgramaPrincipal()
+
+function crearTarjetas(array) {
+  let contenedor = document.getElementById("productos")
+  contenedor.innerHTML = ""
+  array.forEach(elemento => {
+    let producto = document.createElement("div")
+    producto.className = "tarjetaProducto"
+    // producto.classList.add("tarjetaProducto")
+
+    producto.innerHTML = `
+      <h4>${elemento.nombre}</h4>
+      <img class="imagen" src="images/${elemento.rutaImagen}">
+      <h4>$${elemento.precio}</h4>
+    `
+    contenedor.appendChild(producto)
+  })
+}
+
+function filtrar(elementos) {
+  let arrayFiltrado = elementos.filter(producto => producto.nombre.includes(buscador.value) || producto.categoria.includes(buscador.value))
+  crearTarjetas(arrayFiltrado)
+}
+
+function filtrarPorCategoria(id, productos) {
+  if (id === "todos") {
+    crearTarjetas(productos)
+  } else {
+    let elementosFiltrados = productos.filter(producto => producto.categoria === id)
+    crearTarjetas(elementosFiltrados)
+  }
+}
+
+// OPCION 2
+function crearFiltros(arrayDeElementos, contenedorFiltros) {
+  let filtros = ["todos"]
+  arrayDeElementos.forEach(producto => {
+    if (!filtros.includes(producto.categoria)) {
+      filtros.push(producto.categoria)
+    }
+  })
+
+  filtros.forEach(filtro => {
+    let boton = document.createElement("button")
+    boton.id = filtro
+    boton.innerText = filtro
+    contenedorFiltros.appendChild(boton)
+
+    let botonCapturado = document.getElementById(filtro)
+    // botonCapturado.addEventListener("click", filtrarPorCategoria)
+    botonCapturado.addEventListener("click", (e) => filtrarPorCategoria(e.target.id, arrayDeElementos))
+  })
+}
+
+let inputEnter = document.getElementById("pruebaEnter")
+inputEnter.addEventListener("keypress", miFuncion)
+inputEnter.addEventListener("keyup", miFuncion)
+inputEnter.addEventListener("keydown", miFuncion)
+
+function miFuncion(e) {
+  if (e.which === 13 || e.keyCode === 13) {
+    console.log("PRESIONE ENTER")
+  }
+}

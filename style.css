@@ -69,6 +69,16 @@ nav ul a{
     flex-wrap: wrap;
 }
 
+.elementoDelCarrito, #encabezadoCarrito {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.oculto {
+display: none;
+} 
+
 .tarjetaProducto{
     width: 20vw;
     height: auto;

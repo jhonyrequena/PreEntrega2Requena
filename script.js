@@ -29,9 +29,13 @@ let productos = [
   {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
 ]
 
+let carritoJSON = JSON.parse(localStorage.getItem('carrito'))
+let carrito = carritoJSON ? carritoJSON : []
+
+
 let contenedor = document.getElementById('productos')
 
-cards(productos, contenedor)
+cards(productos)
 
 function cards (arrayProductos){
 
@@ -44,52 +48,90 @@ function cards (arrayProductos){
     <h3>${tarjeta.nombre}</h3>
     <img class='imagenTarjeta' src='img/${tarjeta.rutaImagen}'>
     <h3>Precio: $${tarjeta.precio}</h3>
-    <button>Agregar al carrito</buton>
+    <button id=${tarjeta.id}>Agregar al carrito</button>
     `
     contenedor.appendChild(producto)
-  })
-  }
-  
-let buscador = document.getElementById('search')
-buscador.addEventListener('input', filtro)
 
-function filtro() {
-  let filtroArray = productos.filter(tarjeta => tarjeta.nombre.toLocaleLowerCase().includes(buscador.value.toLocaleLowerCase()) || tarjeta.categoria.toLocaleLowerCase().includes(buscador.value.toLocaleLowerCase()))
+    let botonAgregarAlCarrito = document.getElementById(tarjeta.id)
+    botonAgregarAlCarrito.addEventListener('click', () => agregarAlCarrito(arrayProductos, tarjeta.id, carrito))
+  })
+}
+
+
+function agregarAlCarrito(arrayProductos, id, carrito) {
+  let productoBuscado = arrayProductos.find(producto => producto.id === id)
+  let posicionProductoEnCarrito = carrito.findIndex(producto => producto.id === id)
+
+  if (posicionProductoEnCarrito !== -1) {
+    carrito[posicionProductoEnCarrito].unidades++
+    carrito[posicionProductoEnCarrito].subtotal = carrito[posicionProductoEnCarrito].unidades * carrito[posicionProductoEnCarrito].precio
+  } else {
+    carrito.push({
+      id: productoBuscado.id,
+      nombre: productoBuscado.nombre,
+      precio: productoBuscado.precio,
+      unidades: 1,
+      subtotal: productoBuscado.precio
+    })
+  }
+  localStorage.setItem('carrito', JSON.stringify(carrito))
+  renderizarCarrito(carrito)
+}
+
+function renderizarCarrito(carritoJSON) {
+  let carritoFisico = document.getElementById('carrito')
+  carritoFisico.innerHTML = `
+    <div id=encabezadoCarrito>
+      <p>Nombre</p>
+      <p>Precio</p>
+      <p>Subtotal</p>
+    </div>
+  `
+  carritoJSON.forEach(({ nombre, precio, subtotal }) => {
+    let elementoDelCarrito = document.createElement('div')
+    elementoDelCarrito.classList.add('elementoDelCarrito')
+    elementoDelCarrito.innerHTML = `
+      <p>${nombre}</p>
+      <p>${precio}</p>
+      <p>${subtotal}</p>
+    `
+    carritoFisico.appendChild(elementoDelCarrito)
+  })
+}
+
+
+let buscador = document.getElementById('search')
+  buscador.addEventListener('input', filtro)
+  
+  function filtro() {
+    console.log(filtro)
+  let filtroArray = productos.filter(tarjeta => tarjeta.nombre.toLowerCase().includes(buscador.value.toLowerCase()) || tarjeta.categoria.toLowerCase().includes(buscador.value.toLowerCase()))
   cards (filtroArray)
 }
 
+let botonCarrito = document.getElementById('botonCarrito')
+botonCarrito.addEventListener('click', mostrarOcultar)
+
+function mostrarOcultar() {
+  let padreContenedor = document.getElementById('productos')
+  let carrito = document.getElementById("contenedorCarrito")
+  padreContenedor.classList.toggle('oculto')
+  carrito.classList.toggle('oculto')
+}
+
+
+
+
+
+
+
+
+
+
+
+
 //Logica para hacer una funcion que oculte y muestre contenido segun el evento
 //Capturo los elementos del DOM por sus IDs
-let botonServicio = document.getElementById('btnServicio')
-let botonProducto = document.getElementById('btnProducto')
-let botonContacto = document.getElementById('btnContacto')
-
-let seccionServicios = document.getElementById('servicios')
-let seccionProductos = document.getElementById('productos')
-let seccionContacto = document.getElementById('contacto')
-
-//Ahora agregamos los eventos de tipo Click para llamar a la funcion ocultar
-botonServicio.addEventListener('click', () => {
-  mostrarSeccion(seccionServicios)
-})
-
-botonProducto.addEventListener('click', () => {
-  mostrarSeccion(seccionProductos)
-})
-
-botonContacto.addEventListener('click', () =>{
-  mostrarSeccion(seccionContacto)
-})
-
-function mostrarSeccion (seccion) {
-//Ocultamos todas secciones
-  let secciones = document.getElementsByClassName('seccion')
-  for (let i = 0; i < secciones.length; i++){
-    secciones[i].style.display = 'none'
-  }
-//Mostramos la seccion seleccionada
-  seccion.style.display = 'block'
-}
 
 
 
