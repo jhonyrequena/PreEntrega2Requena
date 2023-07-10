@@ -1,287 +1,143 @@
-/*Programa para salon de belleza donde el usuario puede visualizar el costo de diferentes servicios, 
-ademas de poder filtrar por categoria segun la categoria del servicio.*/
-//Array para los servicios
-/*let servicios = [
-    {nombre: 'Tintura', categoria: 'Color', precio: 5000}, //0
-    {nombre: 'Reflejos', categoria: 'Color', precio: 15000}, //1
-    {nombre: 'Balayage', categoria: 'Color', precio: 15000}, //2
-    {nombre: 'Botox', categoria: 'Nutrición', precio: 10000}, //3
-    {nombre: 'Mascarilla Capilar', categoria: 'Nutrición', precio: 5000}, //4
-]*/
+function peluqueria (){
+  //Array de productos
+    let productos = [
+      {id: 10, nombre: 'Mascara Hidro-Nutritiva Fidelite Caviar', categoria: 'Reparación Capilar', precio: 1600, rutaImagen: 'mascara01.webp'},
+      {id: 11, nombre: 'Master Crema Acida Fidelite Color', categoria: 'Reparación Capilar', precio: 1330, rutaImagen: 'mascara02.webp'},
+      {id: 12, nombre: 'Mascara Argan Mythical Fidelite', categoria: 'Reparación Capilar', precio: 2500, rutaImagen: 'mascara03.webp'},
+      {id: 13, nombre: 'Mascara Renovadora Coco y Vainilla Fidelite', categoria: 'Reparación Capilar', precio: 1490, rutaImagen: 'mascara04.webp'},
+      {id: 14, nombre: 'Tijera de Metal Dayo - Navaja 5 1/2', categoria: 'Utensilios', precio: 7680, rutaImagen: 'tijera01.webp'},
+      {id: 15, nombre: 'Jessamy Paleta para Reflejos XL', categoria: 'Utensilios', precio: 280, rutaImagen: 'paleta01.webp'},
+      {id: 16, nombre: 'Tijera para Pulir Royal - 5.5"', categoria: 'Utensilios', precio: 4430, rutaImagen: 'tijera02.webp'},
+      {id: 17, nombre: 'Cepillo Denman - (Alisado)Todo tipo de Cabello', categoria: 'Utensilios', precio: 3960, rutaImagen: 'cepillo02.webp'},
+      {id: 18, nombre: 'Cepillo Termico Profesional Jessamy 36mm', categoria: 'Utensilios', precio: 1490, rutaImagen: 'cepillo01.webp'},
+      {id: 19, nombre: 'Pincel para Tintura Profesional Jessamy', categoria: 'Utensilios', precio: 260, rutaImagen: 'pincel01.webp'},
+      {id: 20, nombre: 'Schwarzkopf Blond me activador premium x 1lt', categoria: 'Color', precio: 7200, rutaImagen: 'oxidante20v01.webp'},
+      {id: 21, nombre: 'Kostume Máscara Matizadora Nacre 250gr', categoria: 'Color', precio: 4350, rutaImagen: 'matizador01.webp'},
+      {id: 22, nombre: 'Mascara Matizadora Blue - La Puissance', categoria: 'Color', precio: 4600, rutaImagen: 'matizador02.webp'},
+      {id: 23, nombre: 'Polvo Decolorante Issue - Professional Blanc Nature x 700gr', categoria: 'Color', precio: 5150, rutaImagen: 'deco01.webp'},
+      {id: 24, nombre: 'Polvo Decolorante Schwarzkopf Professional Blondme', categoria: 'Color', precio: 23000, rutaImagen: 'deco02.webp'},
+      {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
+    ]
+    
+    let buscador = document.getElementById('search')
+    buscador.addEventListener('input', () => {
+    filtro(productos, buscador.value.toLowerCase())
+  })
+    
+    let botonCarrito = document.getElementById('botonCarrito')
+    botonCarrito.addEventListener('click', mostrarOcultar)
+    
+    cards (productos)
+  }
 
-//Array de productos
-let productos = [
-  {id: 10, nombre: 'Mascara Hidro-Nutritiva Fidelite Caviar', categoria: 'Reparación Capilar', precio: 1600, rutaImagen: 'mascara01.webp'},
-  {id: 11, nombre: 'Master Crema Acida Fidelite Color', categoria: 'Reparación Capilar', precio: 1330, rutaImagen: 'mascara02.webp'},
-  {id: 12, nombre: 'Mascara Argan Mythical Fidelite', categoria: 'Reparación Capilar', precio: 2500, rutaImagen: 'mascara03.webp'},
-  {id: 13, nombre: 'Mascara Renovadora Coco y Vainilla Fidelite', categoria: 'Reparación Capilar', precio: 1490, rutaImagen: 'mascara04.webp'},
-  {id: 14, nombre: 'Tijera de Metal Dayo - Navaja 5 1/2', categoria: 'Utensilios', precio: 7680, rutaImagen: 'tijera01.webp'},
-  {id: 15, nombre: 'Jessamy Paleta para Reflejos XL', categoria: 'Utensilios', precio: 280, rutaImagen: 'paleta01.webp'},
-  {id: 16, nombre: 'Tijera para Pulir Royal - 5.5"', categoria: 'Utensilios', precio: 4430, rutaImagen: 'tijera02.webp'},
-  {id: 17, nombre: 'Cepillo Denman - (Alisado)Todo tipo de Cabello', categoria: 'Utensilios', precio: 3960, rutaImagen: 'cepillo02.webp'},
-  {id: 18, nombre: 'Cepillo Termico Profesional Jessamy 36mm', categoria: 'Utensilios', precio: 1490, rutaImagen: 'cepillo01.webp'},
-  {id: 19, nombre: 'Pincel para Tintura Profesional Jessamy', categoria: 'Utensilios', precio: 260, rutaImagen: 'pincel01.webp'},
-  {id: 20, nombre: 'Schwarzkopf Blond me activador premium x 1lt', categoria: 'Color', precio: 7200, rutaImagen: 'oxidante20v01.webp'},
-  {id: 21, nombre: 'Kostume Máscara Matizadora Nacre 250gr', categoria: 'Color', precio: 4350, rutaImagen: 'matizador01.webp'},
-  {id: 22, nombre: 'Mascara Matizadora Blue - La Puissance', categoria: 'Color', precio: 4600, rutaImagen: 'matizador02.webp'},
-  {id: 23, nombre: 'Polvo Decolorante Issue - Professional Blanc Nature x 700gr', categoria: 'Color', precio: 5150, rutaImagen: 'deco01.webp'},
-  {id: 24, nombre: 'Polvo Decolorante Schwarzkopf Professional Blondme', categoria: 'Color', precio: 23000, rutaImagen: 'deco02.webp'},
-  {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
-]
+  //Llamado de la Funcion principal
+  peluqueria()
 
+  //Funcion para crear las tarjetas de los productos de manera dinamica
+  function cards (productos){
+
+    let contenedor = document.getElementById('productos')
+    contenedor.innerHTML = ''
+    
+    productos.forEach (tarjeta => {
+      let producto = document.createElement('div')
+      producto.classList.add('tarjetaProducto')
+      producto.innerHTML =`
+      <div class = 'card-body'>
+        <div class= 'd-flex flex-column justify-content-between align-items-center my-3'>
+          <h3 class = 'card-title'>${tarjeta.nombre}</h3>
+          <img class = 'imagenTarjeta img-fluid text-center' src='img/${tarjeta.rutaImagen}'>
+          <h3 class = 'card-text'>Precio: $${tarjeta.precio}</h3>
+          <button class = 'btn btn-secondary' id=${tarjeta.id}>Agregar al carrito</button>
+        </div>
+      </div>
+      `
+      contenedor.appendChild(producto) 
+
+      
+    })
+  }
+
+  //Funcion que permite filtrar productos por nombre y categoria
+  function filtro(productos, busqueda) {
+    let filtroArray = productos.filter(tarjeta => tarjeta.nombre.toLowerCase().includes(busqueda) || tarjeta.categoria.toLowerCase().includes(busqueda))
+    cards(filtroArray)
+  }
+
+// Obtener el carrito del almacenamiento local
 let carritoJSON = JSON.parse(localStorage.getItem('carrito'))
 let carrito = carritoJSON ? carritoJSON : []
 
+// Obtener los elementos del carrito y el botón "Agregar al carrito"
+let elementosCarrito = document.getElementById('carrito')
+let botonesAgregar = document.querySelectorAll('.btn-secondary')
 
-let contenedor = document.getElementById('productos')
+// Agregar evento click a los botones "Agregar al carrito"
+botonesAgregar.forEach((boton) => {
+  boton.addEventListener('click', () => {
+    // Obtener el ID del producto seleccionado
+    let idProducto = parseInt(boton.id)
 
-cards(productos)
+    // Buscar el producto en el array de productos
+    let producto = producto.find((p) => p.id === idProducto)
 
-function cards (arrayProductos){
+    // Verificar si el producto ya está en el carrito
+    let productoEnCarrito = carrito.find((p) => p.id === idProducto)
 
-  contenedor.innerHTML = ''
-  
-  arrayProductos.forEach (tarjeta => {
-    let producto = document.createElement('div')
-    producto.className = 'tarjetaProducto'
-    producto.innerHTML =` 
-    <h3>${tarjeta.nombre}</h3>
-    <img class='imagenTarjeta' src='img/${tarjeta.rutaImagen}'>
-    <h3>Precio: $${tarjeta.precio}</h3>
-    <button id=${tarjeta.id}>Agregar al carrito</button>
+    if (productoEnCarrito) {
+      // El producto ya está en el carrito, incrementar las unidades y actualizar el subtotal
+      productoEnCarrito.unidades++
+      productoEnCarrito.subtotal = productoEnCarrito.unidades * productoEnCarrito.precio
+    } else {
+      // El producto no está en el carrito, agregarlo al carrito con una unidad y subtotal inicial
+      let nuevoProducto = {
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        unidades: 1,
+        subtotal: producto.precio,
+      }
+      carrito.push(nuevoProducto)
+    }
+
+    // Guardar el carrito en el almacenamiento local
+    localStorage.setItem('carrito', JSON.stringify(carrito))
+
+    // Renderizar el carrito
+    renderizarCarrito()
+  })
+})
+
+// Función para renderizar el carrito
+function renderizarCarrito() {
+  elementosCarrito.innerHTML = ''
+
+  // Recorrer los productos en el carrito
+  carrito.forEach((producto) => {
+    let elementoProducto = document.createElement('div')
+    elementoProducto.classList.add('elementoDelCarrito')
+    elementoProducto.innerHTML = `
+      <p>${producto.nombre}</p>
+      <p>${producto.precio}</p>
+      <p>${producto.subtotal}</p>
     `
-    contenedor.appendChild(producto)
-
-    let botonAgregarAlCarrito = document.getElementById(tarjeta.id)
-    botonAgregarAlCarrito.addEventListener('click', () => agregarAlCarrito(arrayProductos, tarjeta.id, carrito))
+    elementosCarrito.appendChild(elementoProducto)
   })
 }
 
-
-function agregarAlCarrito(arrayProductos, id, carrito) {
-  let productoBuscado = arrayProductos.find(producto => producto.id === id)
-  let posicionProductoEnCarrito = carrito.findIndex(producto => producto.id === id)
-
-  if (posicionProductoEnCarrito !== -1) {
-    carrito[posicionProductoEnCarrito].unidades++
-    carrito[posicionProductoEnCarrito].subtotal = carrito[posicionProductoEnCarrito].unidades * carrito[posicionProductoEnCarrito].precio
-  } else {
-    carrito.push({
-      id: productoBuscado.id,
-      nombre: productoBuscado.nombre,
-      precio: productoBuscado.precio,
-      unidades: 1,
-      subtotal: productoBuscado.precio
-    })
-  }
-  localStorage.setItem('carrito', JSON.stringify(carrito))
-  renderizarCarrito(carrito)
-}
-
-function renderizarCarrito(carritoJSON) {
-  let carritoFisico = document.getElementById('carrito')
-  carritoFisico.innerHTML = `
-    <div id=encabezadoCarrito>
-      <p>Nombre</p>
-      <p>Precio</p>
-      <p>Subtotal</p>
-    </div>
-  `
-  carritoJSON.forEach(({ nombre, precio, subtotal }) => {
-    let elementoDelCarrito = document.createElement('div')
-    elementoDelCarrito.classList.add('elementoDelCarrito')
-    elementoDelCarrito.innerHTML = `
-      <p>${nombre}</p>
-      <p>${precio}</p>
-      <p>${subtotal}</p>
-    `
-    carritoFisico.appendChild(elementoDelCarrito)
-  })
-}
+// Llamar a la función para renderizar el carrito
+renderizarCarrito()
 
 
-let buscador = document.getElementById('search')
-  buscador.addEventListener('input', filtro)
+  function mostrarOcultar() {
+    let contenedorCarrito = document.getElementById('contenedorCarrito')
+    let carrito = contenedorCarrito.querySelector('#carrito')
   
-  function filtro() {
-    console.log(filtro)
-  let filtroArray = productos.filter(tarjeta => tarjeta.nombre.toLowerCase().includes(buscador.value.toLowerCase()) || tarjeta.categoria.toLowerCase().includes(buscador.value.toLowerCase()))
-  cards (filtroArray)
-}
-
-let botonCarrito = document.getElementById('botonCarrito')
-botonCarrito.addEventListener('click', mostrarOcultar)
-
-function mostrarOcultar() {
-  let padreContenedor = document.getElementById('productos')
-  let carrito = document.getElementById("contenedorCarrito")
-  padreContenedor.classList.toggle('oculto')
-  carrito.classList.toggle('oculto')
-}
-
-
-
-
-
-
-
-
-
-
-
-
-//Logica para hacer una funcion que oculte y muestre contenido segun el evento
-//Capturo los elementos del DOM por sus IDs
-
-
-
-/*
-//Entrada para bienvenida al usuario
-let nombreCliente = prompt('Ingresa tu nombre:')
-alert(`Hola ${nombreCliente}, bienvenido(a) a:\n ***StyloRoss Peluqueria***`)
-
-//Luego se hace el llamado a la funcion principal para que inicie el programa
-principal()
-
-//La idea de esta funcion es que el usuario tenga la posibilidad de elegir un servicio y ademas agregarle el factor del largo de su cabello, para que dicha funcion retorne el precio total para el servicio
-function calcularPrecioPeluqueria() {
+    contenedorCarrito.classList.toggle('oculto')
   
-    let precioPeluqueria = 0
-    let factorPrecioLargo = 1
-  
-    while (true) {
-      let opcionesServicio  = Number(prompt('Elige los servicios a continuación:\n1- Tintura\n2- Reflejos\n3- Balayage\n4- Botox\n5- Mascarilla Capilar\n6- Ampollas Capilares\n9- Volver al menú anterior'))
-  
-      if (opcionesServicio  >= 1 && opcionesServicio  <= 6) {
-        precioPeluqueria += servicios[opcionesServicio  - 1]?.precio || 0
-        break
-      } else if (opcionesServicio  === 9) {
-        principal()
-        return // Regresa a la función principal
-      } else {
-        alert('Opción inválida. Por favor, elige una opción válida.')
-      }
-    }
-  
-    while (true) {
-        let: opciones = Number(prompt('Elige tu largo de cabello:\n1- Corto\n2- Medio\n3- Largo\n9- Regresar al menú anterior'))
-    
-        if (opciones === 1) {
-          factorPrecioLargo = 1
-          break
-        } else if (opciones === 2) {
-          factorPrecioLargo = 1.2
-          break
-        } else if (opciones === 3) {
-          factorPrecioLargo = 1.4
-          break
-        } else if (opciones === 9) {
-            principal()
-            return // Regresa a la función principal
-        } else {
-          alert('Opción inválida. Por favor, elige una opción válida.')
-        }
-      }
-  
-    let precioTotal = precioPeluqueria * factorPrecioLargo
-    alert('El precio total para los servicios elegidos sería de: $' + precioTotal)
-    principal() // Regresa a la función principal
-  }
-  
-//Con este bloque de codigo lo que busco es poder implementar el uso de funciones dentro de otras funciones
-function manosPies() {
-  while (true) {
-    let opcion = Number(prompt('Elije los servicios a continuacion:\n1-Manicure\n2-Pedicure\n9-Regresar al menu anterior'))
-
-    switch (opcion) {
-      case 1:
-        let servicioManicure = servicios.find((servicio) => servicio.nombre === 'Manicure')
-        alert('El costo del servicio de Manicure es: $' + servicioManicure.precio)
-        break
-
-      case 2:
-        let servicioPedicure = servicios.find((servicio) => servicio.nombre === 'Pedicure')
-        alert('El costo del servicio de Pedicure es: $' + servicioPedicure.precio)
-        break
-
-      case 9:
-        return principal()
-
-      default:
-        alert('Opción inválida. Por favor, elige una opción válida.')
-        break
+    if (!contenedorCarrito.classList.contains('oculto')) {
+      renderizarCarrito()
+    } else {
+      carrito.innerHTML = ''
     }
   }
-}
-
-//Validacion para las opciones de la pantalla principal
-function principal() {
-  while (true) {
-    
-    let opcion = prompt('Aca puedes elegir entre las siguientes opciones: \n1- Servicios de Peluqueria\n2- Servicio de Manos y Pies\n3- Lista de Precios por Servicios de Peluqueria\n0- Salir')
-
-    if (opcion === null) {
-      continue
-    }
-
-    if (opcion === '') {
-      alert('Debes ingresar una opción. Por favor, elige una opción válida.')
-      continue
-    }
-
-    opcion = Number(opcion)
-
-    if (isNaN(opcion)) {
-      alert('Opción inválida. Por favor, elige una opción válida.')
-      continue
-    }
-
-    switch (opcion) {
-      case 1:
-        calcularPrecioPeluqueria()
-        break
-
-      case 2:
-        manosPies()
-        break
-
-      case 3:
-        let opcionFiltro = prompt('Elige una opción:\n1- Precios de Servicios para Color\n2- Precios de Servicios para Nutrición\n9-Regresar al menu anterior')
-
-        if (opcionFiltro === null) {
-          continue
-        }
-
-        if (opcionFiltro === '') {
-          alert('Debes ingresar una opción. Por favor, elige una opción válida.')
-          continue
-        }
-
-        opcionFiltro = Number(opcionFiltro)
-
-        if (isNaN(opcionFiltro)) {
-          alert('Opción inválida. Por favor, elige una opción válida.')
-          continue
-        }
-
-        let serviciosFiltrados = servicios.filter(servicio => {
-          if (opcionFiltro === 1) {
-            return servicio.categoria === 'Color'
-          } else if (opcionFiltro === 2) {
-            return servicio.categoria === 'Nutrición'
-          }
-        })
-
-        let serviciosMostrados = serviciosFiltrados.map(servicio => `${servicio.nombre} - $${servicio.precio}`)
-        alert(`Lista de precios:\n${serviciosMostrados.join('\n')}`);
-        break
-
-      case 0:
-        alert('Muchas gracias por visitarnos.\nEspero vuelvas pronto.')
-        return
-
-      default:
-        alert('Opción inválida. Por favor, elige una opción válida.')
-    }
-  }
-}*/
