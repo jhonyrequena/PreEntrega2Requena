@@ -1,3 +1,6 @@
+// Buscar el producto en el array de productos
+let elementosCarrito = document.getElementById('carrito')
+//Funcion Principal
 function peluqueria (){
   //Array de productos
     let productos = [
@@ -18,23 +21,29 @@ function peluqueria (){
       {id: 24, nombre: 'Polvo Decolorante Schwarzkopf Professional Blondme', categoria: 'Color', precio: 23000, rutaImagen: 'deco02.webp'},
       {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
     ]
-    
+    console.log(productos)
     let buscador = document.getElementById('search')
     buscador.addEventListener('input', () => {
     filtro(productos, buscador.value.toLowerCase())
   })
     
+    // Guardar el carrito en el almacenamiento local
+    localStorage.setItem('carrito', JSON.stringify(productos))
+    // Obtener el carrito del almacenamiento local
+    let carritoJSON = JSON.parse(localStorage.getItem('carrito'))
+    let carrito = carritoJSON ? carritoJSON : []
+
     let botonCarrito = document.getElementById('botonCarrito')
-    botonCarrito.addEventListener('click', mostrarOcultar)
+    botonCarrito.addEventListener('click', carrito)
     
-    cards (productos)
-  }
+    cards (productos, carrito)
+}
 
   //Llamado de la Funcion principal
   peluqueria()
 
   //Funcion para crear las tarjetas de los productos de manera dinamica
-  function cards (productos){
+  function cards (productos, carrito){
 
     let contenedor = document.getElementById('productos')
     contenedor.innerHTML = ''
@@ -43,20 +52,27 @@ function peluqueria (){
       let producto = document.createElement('div')
       producto.classList.add('tarjetaProducto')
       producto.innerHTML =`
-      <div class = 'card-body'>
-        <div class= 'd-flex flex-column justify-content-between align-items-center my-3'>
-          <h3 class = 'card-title'>${tarjeta.nombre}</h3>
-          <img class = 'imagenTarjeta img-fluid text-center' src='img/${tarjeta.rutaImagen}'>
-          <h3 class = 'card-text'>Precio: $${tarjeta.precio}</h3>
-          <button class = 'btn btn-secondary' id=${tarjeta.id}>Agregar al carrito</button>
+        <div class = 'card-body'>
+          <div class= 'd-flex flex-column justify-content-between align-items-center my-3'>
+            <h3 class = 'card-title'>${tarjeta.nombre}</h3>
+            <img class = 'imagenTarjeta img-fluid text-center' src='img/${tarjeta.rutaImagen}'>
+            <h3 class = 'card-text'>Precio: $${tarjeta.precio}</h3>
+            <button id='${tarjeta.id}' class = 'btn btn-secondary'>Agregar al carrito</button>
+          </div>
         </div>
-      </div>
-      `
+        `
       contenedor.appendChild(producto) 
-
-      
     })
-  }
+    // Obtener los elementos del carrito y el botón "Agregar al carrito"
+    let botonesAgregar = document.querySelectorAll('.btn-secondary')
+    // Agregar evento click a los botones "Agregar al carrito"
+    botonesAgregar.forEach((boton) => {
+    boton.addEventListener('click', (e) => {
+    // Obtener el ID del producto seleccionado
+    agregarAlCarrito(e.target.id)
+    })
+  })
+}
 
   //Funcion que permite filtrar productos por nombre y categoria
   function filtro(productos, busqueda) {
@@ -64,55 +80,36 @@ function peluqueria (){
     cards(filtroArray)
   }
 
-// Obtener el carrito del almacenamiento local
-let carritoJSON = JSON.parse(localStorage.getItem('carrito'))
-let carrito = carritoJSON ? carritoJSON : []
+  
+  let productoEncontrado = carritoJSON.find((p) => p.id === carritoJSON.id)
+  
+function agregarAlCarrito(id){
+    
+  // Verificar si el producto ya está en el carrito
+  let productoEnCarrito = carrito.find((p) => p.id === producto.id)
 
-// Obtener los elementos del carrito y el botón "Agregar al carrito"
-let elementosCarrito = document.getElementById('carrito')
-let botonesAgregar = document.querySelectorAll('.btn-secondary')
-
-// Agregar evento click a los botones "Agregar al carrito"
-botonesAgregar.forEach((boton) => {
-  boton.addEventListener('click', () => {
-    // Obtener el ID del producto seleccionado
-    let idProducto = parseInt(boton.id)
-
-    // Buscar el producto en el array de productos
-    let producto = producto.find((p) => p.id === idProducto)
-
-    // Verificar si el producto ya está en el carrito
-    let productoEnCarrito = carrito.find((p) => p.id === idProducto)
-
-    if (productoEnCarrito) {
-      // El producto ya está en el carrito, incrementar las unidades y actualizar el subtotal
-      productoEnCarrito.unidades++
-      productoEnCarrito.subtotal = productoEnCarrito.unidades * productoEnCarrito.precio
-    } else {
-      // El producto no está en el carrito, agregarlo al carrito con una unidad y subtotal inicial
-      let nuevoProducto = {
-        id: producto.id,
-        nombre: producto.nombre,
-        precio: producto.precio,
-        unidades: 1,
-        subtotal: producto.precio,
-      }
-      carrito.push(nuevoProducto)
+  if (productoEnCarrito) {
+    // El producto ya está en el carrito, incrementar las unidades y actualizar el subtotal
+    productoEnCarrito.unidades++
+    productoEnCarrito.subtotal = productoEnCarrito.unidades * productoEnCarrito.precio
+  } else {
+    // El producto no está en el carrito, agregarlo al carrito con una unidad y subtotal inicial
+    let nuevoProducto = {
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      unidades: 1,
+      subtotal: producto.precio,
     }
+    carrito.push(nuevoProducto)
+  }
+}
 
-    // Guardar el carrito en el almacenamiento local
-    localStorage.setItem('carrito', JSON.stringify(carrito))
-
-    // Renderizar el carrito
-    renderizarCarrito()
-  })
-})
-
-// Función para renderizar el carrito
-function renderizarCarrito() {
+//Función para renderizar el carrito
+function renderizarCarrito(nuevoProducto, carrito) {
   elementosCarrito.innerHTML = ''
 
-  // Recorrer los productos en el carrito
+//Recorrer los productos en el carrito
   carrito.forEach((producto) => {
     let elementoProducto = document.createElement('div')
     elementoProducto.classList.add('elementoDelCarrito')
@@ -124,20 +121,3 @@ function renderizarCarrito() {
     elementosCarrito.appendChild(elementoProducto)
   })
 }
-
-// Llamar a la función para renderizar el carrito
-renderizarCarrito()
-
-
-  function mostrarOcultar() {
-    let contenedorCarrito = document.getElementById('contenedorCarrito')
-    let carrito = contenedorCarrito.querySelector('#carrito')
-  
-    contenedorCarrito.classList.toggle('oculto')
-  
-    if (!contenedorCarrito.classList.contains('oculto')) {
-      renderizarCarrito()
-    } else {
-      carrito.innerHTML = ''
-    }
-  }
