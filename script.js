@@ -1,5 +1,3 @@
-// Buscar el producto en el array de productos
-let elementosCarrito = document.getElementById('carrito')
 //Funcion Principal
 function peluqueria (){
   //Array de productos
@@ -21,103 +19,109 @@ function peluqueria (){
       {id: 24, nombre: 'Polvo Decolorante Schwarzkopf Professional Blondme', categoria: 'Color', precio: 23000, rutaImagen: 'deco02.webp'},
       {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
     ]
-    console.log(productos)
-    let buscador = document.getElementById('search')
-    buscador.addEventListener('input', () => {
-    filtro(productos, buscador.value.toLowerCase())
-  })
-    
-    // Guardar el carrito en el almacenamiento local
-    localStorage.setItem('carrito', JSON.stringify(productos))
-    // Obtener el carrito del almacenamiento local
-    let carritoJSON = JSON.parse(localStorage.getItem('carrito'))
-    let carrito = carritoJSON ? carritoJSON : []
 
-    let botonCarrito = document.getElementById('botonCarrito')
-    botonCarrito.addEventListener('click', carrito)
-    
-    cards (productos, carrito)
+      let buscador = document.getElementById('search')
+      buscador.addEventListener('input', () => {
+      filtro(productos, buscador.value.toLowerCase())
+    })
+  
+  // Obtener el carrito del almacenamiento local
+  let carritoJSON = JSON.parse(localStorage.getItem('carrito'))
+  let carrito = carritoJSON ? carritoJSON : []
+
+  cards (productos, carrito)
+  renderizarCarrito(carritoJSON)
+
+  let btnFinalizarCompra = document.getElementById('finalizarCompra')
+  btnFinalizarCompra.addEventListener('click', () => btnFinalizarCompra(carrito))
 }
 
-  //Llamado de la Funcion principal
-  peluqueria()
+//Llamado de la Funcion principal
+peluqueria()
 
-  //Funcion para crear las tarjetas de los productos de manera dinamica
-  function cards (productos, carrito){
+//Funcion para finalizar la compra, modificar el DOM y vaciar el storage
+function finalizarCompra (carrito){
+  let mostrarCarrito = document.getElementById('carrito')
+  mostrarCarrito.innerHTML = ''
+  localStorage.removeItem('carrito')
+  carrito = []
+  renderizarCarrito([])
+}
 
-    let contenedor = document.getElementById('productos')
-    contenedor.innerHTML = ''
-    
-    productos.forEach (tarjeta => {
-      let producto = document.createElement('div')
-      producto.classList.add('tarjetaProducto')
-      producto.innerHTML =`
-        <div class = 'card-body'>
-          <div class= 'd-flex flex-column justify-content-between align-items-center my-3'>
-            <h3 class = 'card-title'>${tarjeta.nombre}</h3>
-            <img class = 'imagenTarjeta img-fluid text-center' src='img/${tarjeta.rutaImagen}'>
-            <h3 class = 'card-text'>Precio: $${tarjeta.precio}</h3>
-            <button id='${tarjeta.id}' class = 'btn btn-secondary'>Agregar al carrito</button>
-          </div>
+//Funcion para crear las tarjetas de los productos de manera dinamica
+function cards (arrayProductos, carrito){
+  //Contenedor donde se alojan los productos
+  let contenedor = document.getElementById('tarjetas')
+  contenedor.innerHTML = ''
+  //Para cada tarjeta se agregan las propiedades correspondientes
+  arrayProductos.forEach (({nombre, rutaImagen, precio, id}) => {
+    let tarjeta = document.createElement('div')
+    tarjeta.classList.add('tarjetaProducto')
+    tarjeta.innerHTML =`
+      <div class = 'card-body'>
+        <div class= 'd-flex flex-column justify-content-between align-items-center my-3'>
+          <h3 class = 'card-title'>${nombre}</h3>
+          <img class = 'imagenTarjeta img-fluid text-center' src='img/${rutaImagen}'>
+          <h3 class = 'card-text'>Precio: $${precio}</h3>
+          <button id='${id}' class = 'btn btn-outline-success'>Agregar al carrito</button>
         </div>
-        `
-      contenedor.appendChild(producto) 
-    })
-    // Obtener los elementos del carrito y el botón "Agregar al carrito"
-    let botonesAgregar = document.querySelectorAll('.btn-secondary')
-    // Agregar evento click a los botones "Agregar al carrito"
-    botonesAgregar.forEach((boton) => {
-    boton.addEventListener('click', (e) => {
-    // Obtener el ID del producto seleccionado
-    agregarAlCarrito(e.target.id)
-    })
+      </div>
+      `
+    contenedor.appendChild(tarjeta)
+
+    let btnAgregarCarrito = document.getElementById(id)
+    btnAgregarCarrito.addEventListener('click', () => agregarAlCarrito(arrayProductos, id, carrito))
   })
 }
 
-  //Funcion que permite filtrar productos por nombre y categoria
-  function filtro(productos, busqueda) {
-    let filtroArray = productos.filter(tarjeta => tarjeta.nombre.toLowerCase().includes(busqueda) || tarjeta.categoria.toLowerCase().includes(busqueda))
-    cards(filtroArray)
-  }
+function agregarAlCarrito(arrayProductos, id, carrito){
+  console.log(id)
+  let agregarProducto = arrayProductos.find(producto => producto.id === id)
+  let productoAgregado = carrito.findIndex(producto => producto.id === id)
 
-  
-  let productoEncontrado = carritoJSON.find((p) => p.id === carritoJSON.id)
-  
-function agregarAlCarrito(id){
-    
-  // Verificar si el producto ya está en el carrito
-  let productoEnCarrito = carrito.find((p) => p.id === producto.id)
-
-  if (productoEnCarrito) {
-    // El producto ya está en el carrito, incrementar las unidades y actualizar el subtotal
-    productoEnCarrito.unidades++
-    productoEnCarrito.subtotal = productoEnCarrito.unidades * productoEnCarrito.precio
-  } else {
-    // El producto no está en el carrito, agregarlo al carrito con una unidad y subtotal inicial
-    let nuevoProducto = {
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
+  if (productoAgregado !== -1){
+    carrito[productoAgregado].unidades++
+    carrito[productoAgregado].subtotal = carrito[productoAgregado].unidades * carrito[productoAgregado].precio
+  } else{
+    carrito.push({
+      Codigo: agregarProducto.id,
+      Nombre: agregarProducto.nombre,
+      PrecioUnitario: agregarProducto.precio,
       unidades: 1,
-      subtotal: producto.precio,
-    }
-    carrito.push(nuevoProducto)
+      Subtotal: agregarProducto.precio
+    })
+  }
+  localStorage.setItem('carrito', JSON.stringify(carrito))
+  renderizarCarrito(carrito)
+}
+
+function renderizarCarrito(carritoJSON){
+  
+  let contenedorCarrito = document.getElementById('carrito')
+  contenedorCarrito.innerHTML = ''
+
+  if (carritoJSON){
+    carritoJSON.forEach(({Codigo, Nombre, PrecioUnitario, Unidades, Subtotal}) => {
+     
+      let mostrarCarrito = document.createElement('div')
+      mostrarCarrito.classList.add('elementoDelCarrito')
+      mostrarCarrito.innerHTML = `
+      <ul>
+      <li>${Codigo}</li>
+      <li>${Nombre}</li>
+      <li>${PrecioUnitario}</li>
+      <li>${Unidades}</li>
+      <li>${Subtotal}</li>
+      </ul>
+      <button id='${'finalizarCompra'}' class = 'btn btn-outline-primary'>Finalizar Compra</button>
+      `
+      contenedorCarrito.appendChild(mostrarCarrito)
+    })
   }
 }
 
-//Función para renderizar el carrito
-function renderizarCarrito(nuevoProducto, carrito) {
-  elementosCarrito.innerHTML = ''
-
-//Recorrer los productos en el carrito
-  carrito.forEach((producto) => {
-    let elementoProducto = document.createElement('div')
-    elementoProducto.classList.add('elementoDelCarrito')
-    elementoProducto.innerHTML = `
-      <p>${producto.nombre}</p>
-      <p>${producto.precio}</p>
-      <p>${producto.subtotal}</p>
-    `
-    elementosCarrito.appendChild(elementoProducto)
-  })
+//Funcion que permite filtrar productos por nombre y categoria
+function filtro(productos, busqueda) {
+  let filtroArray = productos.filter(tarjeta => tarjeta.nombre.toLowerCase().includes(busqueda) || tarjeta.categoria.toLowerCase().includes(busqueda))
+  cards(filtroArray)
 }

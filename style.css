@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(241, 229, 229);
+    background-color: rgb(211, 202, 202);
 }
 
 nav {
@@ -59,9 +59,36 @@ nav ul a{
     width: 100%;
 }
 
-/* .imagenTarjeta{
+.tarjetaProducto{
+    width: 20vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgb(100, 62, 1);
+    border-radius: 8px;
+    margin: 15px;
+}
+
+#tarjetas{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.seccion{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+/* 
+.imagenTarjeta{
     width: 15vw;
-} */
+}
 
 #productos{
     display: flex;
@@ -79,14 +106,5 @@ nav ul a{
 display: none;
 } 
 
-.tarjetaProducto{
-    width: 20vw;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid rgb(100, 62, 1);
-    border-radius: 8px;
-    margin: 15px;
-}
+
+ */
