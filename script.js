@@ -1,23 +1,4 @@
-//Array de productos
-/*let productos = [
-  {id: 10, nombre: 'Mascara Hidro-Nutritiva Fidelite Caviar', categoria: 'Reparación Capilar', precio: 1600, rutaImagen: 'mascara01.webp'},
-  {id: 11, nombre: 'Master Crema Acida Fidelite Color', categoria: 'Reparación Capilar', precio: 1330, rutaImagen: 'mascara02.webp'},
-  {id: 12, nombre: 'Mascara Argan Mythical Fidelite', categoria: 'Reparación Capilar', precio: 2500, rutaImagen: 'mascara03.webp'},
-  {id: 13, nombre: 'Mascara Renovadora Coco y Vainilla Fidelite', categoria: 'Reparación Capilar', precio: 1490, rutaImagen: 'mascara04.webp'},
-  {id: 14, nombre: 'Tijera de Metal Dayo - Navaja 5 1/2', categoria: 'Utensilios', precio: 7680, rutaImagen: 'tijera01.webp'},
-  {id: 15, nombre: 'Jessamy Paleta para Reflejos XL', categoria: 'Utensilios', precio: 280, rutaImagen: 'paleta01.webp'},
-  {id: 16, nombre: 'Tijera para Pulir Royal - 5.5"', categoria: 'Utensilios', precio: 4430, rutaImagen: 'tijera02.webp'},
-  {id: 17, nombre: 'Cepillo Denman - (Alisado)Todo tipo de Cabello', categoria: 'Utensilios', precio: 3960, rutaImagen: 'cepillo02.webp'},
-  {id: 18, nombre: 'Cepillo Termico Profesional Jessamy 36mm', categoria: 'Utensilios', precio: 1490, rutaImagen: 'cepillo01.webp'},
-  {id: 19, nombre: 'Pincel para Tintura Profesional Jessamy', categoria: 'Utensilios', precio: 260, rutaImagen: 'pincel01.webp'},
-  {id: 20, nombre: 'Schwarzkopf Blond me activador premium x 1lt', categoria: 'Color', precio: 7200, rutaImagen: 'oxidante20v01.webp'},
-  {id: 21, nombre: 'Kostume Máscara Matizadora Nacre 250gr', categoria: 'Color', precio: 4350, rutaImagen: 'matizador01.webp'},
-  {id: 22, nombre: 'Mascara Matizadora Blue - La Puissance', categoria: 'Color', precio: 4600, rutaImagen: 'matizador02.webp'},
-  {id: 23, nombre: 'Polvo Decolorante Issue - Professional Blanc Nature x 700gr', categoria: 'Color', precio: 5150, rutaImagen: 'deco01.webp'},
-  {id: 24, nombre: 'Polvo Decolorante Schwarzkopf Professional Blondme', categoria: 'Color', precio: 23000, rutaImagen: 'deco02.webp'},
-  {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
-]*/
-
+let productos = []
 // Obtener el contenedor de productos y carrito del DOM
 const contenedorProductos = document.getElementById('contenedorProductos')
 const contenedorCarrito = document.getElementById('contenedorCarrito')
@@ -36,11 +17,11 @@ function cargarProductos() {
     .then(response => response.json())
     .then(data => {
       // Guardar los productos en la variable productos
-      productos = data;
+      productos = data.productos
       // Mostrar los productos en el contenedor
-      mostrarProductos();
+      mostrarProductos(productos)
     })
-    .catch(error => console.error('Error al cargar los productos:', error));
+    .catch(error => console.error('Error al cargar los productos:', error))
 }
 
 
@@ -59,7 +40,7 @@ mostrarProductos(productosFiltrados) // Mostrar los productos filtrados en el co
 }
 
 // Mostrar los productos en el contenedor
-function mostrarProductos() {
+function mostrarProductos(productos) {
 contenedorProductos.innerHTML = ''
 
 productos.forEach((producto) => {
@@ -90,7 +71,7 @@ productos.forEach((producto) => {
 // Agregar un producto al carrito
 function agregarAlCarrito(event) {
 const productoId = parseInt(event.target.dataset.id)
-const producto = producto.find((p) => p.id === productoId)
+const producto = productos.find((p) => p.id === productoId)
 
 const productoEnCarrito = carrito.find((p) => p.id === productoId)
 
