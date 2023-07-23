@@ -1,5 +1,5 @@
 //Array de productos
-let productos = [
+/*let productos = [
   {id: 10, nombre: 'Mascara Hidro-Nutritiva Fidelite Caviar', categoria: 'Reparación Capilar', precio: 1600, rutaImagen: 'mascara01.webp'},
   {id: 11, nombre: 'Master Crema Acida Fidelite Color', categoria: 'Reparación Capilar', precio: 1330, rutaImagen: 'mascara02.webp'},
   {id: 12, nombre: 'Mascara Argan Mythical Fidelite', categoria: 'Reparación Capilar', precio: 2500, rutaImagen: 'mascara03.webp'},
@@ -16,18 +16,33 @@ let productos = [
   {id: 23, nombre: 'Polvo Decolorante Issue - Professional Blanc Nature x 700gr', categoria: 'Color', precio: 5150, rutaImagen: 'deco01.webp'},
   {id: 24, nombre: 'Polvo Decolorante Schwarzkopf Professional Blondme', categoria: 'Color', precio: 23000, rutaImagen: 'deco02.webp'},
   {id: 25, nombre: 'Polvo Decolorante Issue - Professional Sin Amoniaco', categoria: 'Color', precio: 6050, rutaImagen: 'deco03.webp'},
-]
+]*/
 
 // Obtener el contenedor de productos y carrito del DOM
 const contenedorProductos = document.getElementById('contenedorProductos')
 const contenedorCarrito = document.getElementById('contenedorCarrito')
 
+
 // Obtener el carrito almacenado en el localStorage o crear uno vacío
 let carrito = JSON.parse(localStorage.getItem('carrito')) || []
 
-
 const inputBusqueda = document.getElementById('search')
 inputBusqueda.addEventListener('input', buscarProductos)
+
+
+// Cargar los productos usando fetch desde el archivo JSON
+function cargarProductos() {
+  fetch('productos.json')
+    .then(response => response.json())
+    .then(data => {
+      // Guardar los productos en la variable productos
+      productos = data;
+      // Mostrar los productos en el contenedor
+      mostrarProductos();
+    })
+    .catch(error => console.error('Error al cargar los productos:', error));
+}
+
 
 function buscarProductos() {
 const textoBusqueda = inputBusqueda.value.toLowerCase() // Obtener el texto de búsqueda y convertirlo a minúsculas
@@ -75,7 +90,7 @@ productos.forEach((producto) => {
 // Agregar un producto al carrito
 function agregarAlCarrito(event) {
 const productoId = parseInt(event.target.dataset.id)
-const producto = productos.find((p) => p.id === productoId)
+const producto = producto.find((p) => p.id === productoId)
 
 const productoEnCarrito = carrito.find((p) => p.id === productoId)
 
@@ -169,9 +184,52 @@ mostrarCarrito()
 }
 
 // Mostrar los productos y el carrito inicialmente
-mostrarProductos()
+cargarProductos()
 mostrarCarrito()
 
 // Agregar evento al botón de finalizar compra
 const btnFinalizarCompra = document.getElementById('btnFinalizarCompra')
 btnFinalizarCompra.addEventListener('click', finalizarCompra)
+
+
+//Funcion para mostrar las secciones de la pagina cuando se haga click en cada boton de navegacion.
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.querySelector('nav')
+  const introSection = document.querySelector('header.home')
+  const serviciosSection = document.getElementById('servicios')
+  const productosSection = document.getElementById('productos')
+  const contactoSection = document.getElementById('contacto')
+
+  nav.style.display = 'block'
+  introSection.style.display = 'block'
+  serviciosSection.style.display = 'none'
+  productosSection.style.display = 'none'
+  contactoSection.style.display = 'none'
+
+  //Agregar evento click al boton de Servicios.
+  const btnServicio = document.getElementById('btnServicio')
+  btnServicio.addEventListener('click', () => {
+    serviciosSection.style.display = 'block'
+    introSection.style.display = 'none'
+    productosSection.style.display = 'none'
+    contactoSection.style.display = 'none'
+  })
+
+  //Agregar evento click al boton de Productos.
+  const btnProducto = document.getElementById('btnProducto')
+  btnProducto.addEventListener('click', () => {
+    productosSection.style.display = 'block'
+    serviciosSection.style.display = 'none'
+    introSection.style.display = 'none'
+    contactoSection.style.display = 'none'
+  })
+
+  //Agregar evento click al boton de Contacto.
+  const btnContacto = document.getElementById('btnContacto')
+  btnContacto.addEventListener('click', () => {
+    contactoSection.style.display = 'block'
+    productosSection.style.display = 'none'
+    serviciosSection.style.display = 'none'
+    introSection.style.display = 'none'
+  })
+})
