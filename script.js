@@ -1,91 +1,93 @@
 let productos = []
+
 // Obtener el contenedor de productos y carrito del DOM
 const contenedorProductos = document.getElementById('contenedorProductos')
 const contenedorCarrito = document.getElementById('contenedorCarrito')
 
-
 // Obtener el carrito almacenado en el localStorage o crear uno vacío
 let carrito = JSON.parse(localStorage.getItem('carrito')) || []
+
+// Cargar los productos usando fetch desde el archivo JSON
+function cargarProductos() {
+    fetch('productos.json')
+      .then(response => response.json())
+      .then(data => {
+        // Guardar los productos en la variable productos
+        productos = data.productos
+        // Mostrar los productos en el contenedor
+        mostrarProductos(productos)
+      })
+      .catch(error => console.error('Error al cargar los productos:', error))
+}
+
 
 const inputBusqueda = document.getElementById('search')
 inputBusqueda.addEventListener('input', buscarProductos)
 
-
-// Cargar los productos usando fetch desde el archivo JSON
-function cargarProductos() {
-  fetch('productos.json')
-    .then(response => response.json())
-    .then(data => {
-      // Guardar los productos en la variable productos
-      productos = data.productos
-      // Mostrar los productos en el contenedor
-      mostrarProductos(productos)
-    })
-    .catch(error => console.error('Error al cargar los productos:', error))
-}
-
-
 function buscarProductos() {
-const textoBusqueda = inputBusqueda.value.toLowerCase() // Obtener el texto de búsqueda y convertirlo a minúsculas
+    const textoBusqueda = inputBusqueda.value.toLowerCase() // Obtener el texto de búsqueda y convertirlo a minúsculas
 
-const productosFiltrados = productos.filter((producto) => {
-  // Filtrar los productos por nombre y categoría
-  const nombre = producto.nombre.toLowerCase()
-  const categoria = producto.categoria.toLowerCase()
-  
-  return nombre.includes(textoBusqueda) || categoria.includes(textoBusqueda)
-})
+    const productosFiltrados = productos.filter((producto) => {
+          // Filtrar los productos por nombre y categoría
+          const nombre = producto.nombre.toLowerCase()
+          const categoria = producto.categoria.toLowerCase()
+          
+          return nombre.includes(textoBusqueda) || categoria.includes(textoBusqueda)
+        })
 
-mostrarProductos(productosFiltrados) // Mostrar los productos filtrados en el contenedor
+    mostrarProductos(productosFiltrados) // Mostrar los productos filtrados en el contenedor
 }
 
 // Mostrar los productos en el contenedor
 function mostrarProductos(productos) {
-contenedorProductos.innerHTML = ''
+    contenedorProductos.innerHTML = ''
 
-productos.forEach((producto) => {
-  // Crear la tarjeta del producto
-  const tarjeta = document.createElement('div')
-  tarjeta.classList.add('tarjetaProducto')
-  
-  // Crear el contenido de la tarjeta
-  const contenido = ` 
-    <h3>${producto.nombre}</h3>
-    <img src="img/${producto.rutaImagen}" alt="${producto.nombre}" />
-    <p>Precio: $${producto.precio}</p>
-    <button class="btnComprar" data-id="${producto.id}">Comprar</button>
-  `
-  
-  // Agregar el contenido a la tarjeta
-  tarjeta.innerHTML = contenido
-  
-  // Agregar evento al botón de comprar
-  const btnComprar = tarjeta.querySelector('.btnComprar')
-  btnComprar.addEventListener('click', agregarAlCarrito)
-  
-  // Agregar la tarjeta al contenedor
-  contenedorProductos.appendChild(tarjeta)
-})
+    productos.forEach((producto) => {
+      // Crear la tarjeta del producto
+      const tarjeta = document.createElement('div')
+      tarjeta.classList.add('tarjetaProducto')
+      
+      // Crear el contenido de la tarjeta
+      const contenido = ` 
+        <h3>${producto.nombre}</h3>
+        <img src="img/${producto.rutaImagen}" alt="${producto.nombre}" />
+        <p>Precio: $${producto.precio}</p>
+        <button class="btnComprar" data-id="${producto.id}">Comprar</button>
+      `
+      
+      // Agregar el contenido a la tarjeta
+      tarjeta.innerHTML = contenido
+      
+      // Agregar evento al botón de comprar
+      const btnComprar = tarjeta.querySelector('.btnComprar')
+      btnComprar.addEventListener('click', agregarAlCarrito)
+      
+      // Agregar la tarjeta al contenedor
+      contenedorProductos.appendChild(tarjeta)
+    })
 }
 
 // Agregar un producto al carrito
 function agregarAlCarrito(event) {
-const productoId = parseInt(event.target.dataset.id)
-const producto = productos.find((p) => p.id === productoId)
+    const productoId = parseInt(event.target.dataset.id)
+    const producto = productos.find((p) => p.id === productoId)
 
-const productoEnCarrito = carrito.find((p) => p.id === productoId)
+    const productoEnCarrito = carrito.find((p) => p.id === productoId)
 
-  if (productoEnCarrito) {
-      productoEnCarrito.cantidad++
-  } else {
-      producto.cantidad = 1
-      carrito.push(producto)
-  }
+      if (productoEnCarrito) {
+          productoEnCarrito.cantidad++
+      } else {
+          producto.cantidad = 1
+          carrito.push(producto)
+      }
 
-guardarCarritoEnStorage()
+    guardarCarritoEnStorage()
 
-mostrarCarrito()
+    avisoAgregado()
+
+    mostrarCarrito()
 }
+
 
 const btnCarrito = document.getElementById('botonCarrito')
 const modalCarrito = document.getElementById('modalCarrito')
@@ -99,69 +101,73 @@ modalCerrar.addEventListener('click', cerrarModalCarrito)
 
 // Mostrar el modal del carrito
 function mostrarModalCarrito() {
-modalCarrito.style.display = 'block'
-mostrarCarrito()
+    modalCarrito.style.display = 'block'
+    mostrarCarrito()
 }
 
 // Cerrar el modal del carrito
 function cerrarModalCarrito() {
-modalCarrito.style.display = 'none'
+    modalCarrito.style.display = 'none'
 }
 
 // Renderizar los productos del carrito
 function mostrarCarrito() {
-contenedorCarrito.innerHTML = ''
+    contenedorCarrito.innerHTML = ''
 
-carrito.forEach((productos) => {
-  // Crear la tarjeta del producto en el carrito
-  const tarjetaCarrito = document.createElement('div')
-  tarjetaCarrito.classList.add('productoCarrito')
-  
-  // Calcular el subtotal
-  const subtotal = productos.cantidad * productos.precio
+    carrito.forEach((productos) => {
+      // Crear la tarjeta del producto en el carrito
+      const tarjetaCarrito = document.createElement('div')
+      tarjetaCarrito.classList.add('productoCarrito')
+      
+      // Calcular el subtotal
+      const subtotal = productos.cantidad * productos.precio
 
-  // Crear el contenido de la tarjeta del carrito
-  const contenidoCarrito = `
-    <img src="img/${productos.rutaImagen}" alt="${productos.nombre}" />
-    <h3>${productos.nombre}</h3>
-    <p>Precio: $${productos.precio}</p>
-    <p>Cantidad: ${productos.cantidad}</p>
-    <p>Subtotal: $${subtotal}</p>
-    <button class="btnEliminar" data-id="${productos.id}">Eliminar</button>
-  `
-  
-  // Agregar el contenido a la tarjeta del carrito
-  tarjetaCarrito.innerHTML = contenidoCarrito
-  
-  // Agregar evento al botón de eliminar
-  const btnEliminar = tarjetaCarrito.querySelector('.btnEliminar')
-  btnEliminar.addEventListener('click', eliminarDelCarrito)
-  
-  // Agregar la tarjeta del carrito al contenedor del carrito
-  contenedorCarrito.appendChild(tarjetaCarrito)
+      // Crear el contenido de la tarjeta del carrito
+      const contenidoCarrito = `
+            <img src="img/${productos.rutaImagen}" alt="${productos.nombre}" />
+            <h3>${productos.nombre}</h3>
+            <p>Precio: $${productos.precio}</p>
+            <p>Cantidad: ${productos.cantidad}</p>
+            <p>Subtotal: $${subtotal}</p>
+            <button class="btnEliminar" data-id="${productos.id}">Eliminar</button>
+          `
+      
+      // Agregar el contenido a la tarjeta del carrito
+      tarjetaCarrito.innerHTML = contenidoCarrito
+      
+      // Agregar evento al botón de eliminar
+      const btnEliminar = tarjetaCarrito.querySelector('.btnEliminar')
+      btnEliminar.addEventListener('click', eliminarDelCarrito)
+      
+      // Agregar la tarjeta del carrito al contenedor del carrito
+      contenedorCarrito.appendChild(tarjetaCarrito)
 })
 }
 
 // Eliminar un producto del carrito
 function eliminarDelCarrito(event) {
-const productoId = parseInt(event.target.dataset.id)
-carrito = carrito.filter((producto) => producto.id !== productoId)
-guardarCarritoEnStorage()
+    const productoId = parseInt(event.target.dataset.id)
+    carrito = carrito.filter((producto) => producto.id !== productoId)
 
-mostrarCarrito()
+    guardarCarritoEnStorage()
+
+    avisoEliminado()
+
+    mostrarCarrito()
 }
 
 // Guardar el carrito en el localStorage
 function guardarCarritoEnStorage() {
-localStorage.setItem('carrito', JSON.stringify(carrito))
+    localStorage.setItem('carrito', JSON.stringify(carrito))
 }
 
 // Vaciar el carrito y el localStorage
 function finalizarCompra() {
-carrito = []
-localStorage.removeItem('carrito')
+    carrito = []
+    localStorage.removeItem('carrito')
 
-mostrarCarrito()
+    AvisoFinalizarCompra()
+    cerrarModalCarrito()
 }
 
 // Mostrar los productos y el carrito inicialmente
@@ -214,3 +220,33 @@ document.addEventListener('DOMContentLoaded', () => {
     introSection.style.display = 'none'
   })
 })
+
+function avisoAgregado(){
+  Toastify({
+    text: "Producto Agregado",
+    gravity: "top",
+    position: "right",
+    style: {
+      background: "linear-gradient(to right, #F0A00C, #D8AD5C)",
+    },
+    duration: 2000
+  }).showToast();
+}
+
+function avisoEliminado(){
+  Toastify({
+    text: "Producto Eliminado",
+    gravity: "top",
+    position: "right",
+    style: {
+      background: "linear-gradient(to right, #F60E07, #F1534E)",
+    },
+    duration: 2000
+  }).showToast();
+}
+
+function AvisoFinalizarCompra(){
+  Swal.fire({
+    template: '#my-template'
+  })
+}
