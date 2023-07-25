@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(211, 202, 202);
+    background-color: rgb(255, 255, 255);
 }
 
 nav {
@@ -28,6 +28,20 @@ nav ul a{
     font-size: 25px;
     color: rgb(241, 235, 235);
     padding: 8px;
+}
+
+footer{
+  background-color: #a38643ad;
+  border-radius: 20px;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer img{
+  width: 30%;
 }
 
 .nav{
@@ -126,6 +140,42 @@ margin-top: 28px;
 
   .btnComprar{
     border-radius: 8px;
+    background-color: #bf973c;
+    width: 75%;
+    align-self: center;
+    font-size: 1.2em;
+    color: rgb(245, 245, 220);
+  }
+
+  .btnCarrito{
+    border-radius: 8px;
+    width: 30%;
+    font-size: 1em;
+    color: rgb(245, 245, 220);
+    background-color: #bf973c;
+  }
+
+  .btnFinalizar{
+    width: 40%;
+    height: auto;
+    margin-top: 40px;
+    margin-left: 30%;
+  }
+
+  .btnMasMenos{
+    width: 8%;
+    border-radius: 8px;
+    background-color: #bf973c;
+    color: rgb(245, 245, 220);
+    font-weight: bolder;
+  }
+
+  .btnNav{
+    background-color: #bf973c;
+    color: rgb(245, 245, 220);
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
   }
 
   /* Estilos para Mostrar el Carrito */
