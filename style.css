@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(241, 233, 233);
 }
 
 nav {
@@ -19,10 +19,10 @@ nav ul li {
     text-align: center;
 }
 
-nav ul a{
+nav div ul button{
     margin-right: 60px;
     text-decoration: none;
-    background-color: rgb(201, 151, 77);
+    background-color: #c9974d;
     border: 2px black;
     border-radius: 5px;
     font-size: 25px;
@@ -30,18 +30,45 @@ nav ul a{
     padding: 8px;
 }
 
+nav div ul button:hover{
+  background-color: rgb(27, 21, 8) !important;
+}
+
+nav div ul button li:hover{
+  color: rgb(242, 206, 134) !important;
+}
+
+nav div>.tienda>button:hover{
+  background-color: rgb(27, 21, 8) !important;
+  color: rgb(242, 206, 134) !important;
+}
+
+
 footer{
-  background-color: #a38643ad;
+  background-color: #363127ad;
   border-radius: 20px;
   width: 100%;
   height: 200px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  margin-top: 35px;
 }
 
 footer img{
-  width: 30%;
+  width: 10%;
+}
+
+footer div p{
+  font-size: 1.5em;
+  font-weight: 500;
+  color: antiquewhite;
+  text-align: center;
+}
+
+footer div a{
+  text-decoration: none;
+  justify-content: space-around;
 }
 
 .nav{
@@ -66,6 +93,11 @@ margin-top: 28px;
   text-align: center;
 }
 
+#contacto div article{
+  display: flex;
+  flex-direction: row;
+}
+
 .home{
     margin-top: 5vw;
 }
@@ -87,6 +119,7 @@ margin-top: 28px;
 
 .intro{
     display: flex;
+    justify-content: space-around;
     margin: 15px;
 }
 
@@ -98,7 +131,7 @@ margin-top: 28px;
 }
 
 .imagen{
-    width: 100%;
+    width: 50%;
 }
 
 #contenedorProductos {

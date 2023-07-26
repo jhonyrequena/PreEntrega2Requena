@@ -131,9 +131,9 @@ function mostrarCarrito() {
             <p>Precio: $${productos.precio}</p>
             <p>Cantidad: ${productos.cantidad}</p>
             <p>Subtotal: $${subtotal}</p>
-            <button class='btnMasMenos' data-id="${productos.id}" onclick="decrementarCantidad(event)">-</button>
+            <button class='btnMasMenos' data-id="${productos.id}" onclick="modificarCantidad(event, -1)">-</button>
             <button class="btnEliminar btnCarrito" data-id="${productos.id}">Eliminar</button>
-            <button class='btnMasMenos' data-id="${productos.id}" onclick="incrementarCantidad(event)">+</button>
+            <button class='btnMasMenos' data-id="${productos.id}" onclick="modificarCantidad(event, 1)">+</button>
           `
       
       // Agregar el contenido a la tarjeta del carrito
@@ -148,24 +148,13 @@ function mostrarCarrito() {
 })
 }
 
-function incrementarCantidad(event) {
+// Función para incrementar o decrementar la cantidad de un producto en el carrito
+function modificarCantidad(event, cantidad) {
   const productoId = parseInt(event.target.dataset.id)
   const productoEnCarrito = carrito.find((producto) => producto.id === productoId)
 
-  if (productoEnCarrito) {
-      productoEnCarrito.cantidad += 1
-      guardarCarritoEnStorage()
-      mostrarContadorCarrito()
-      mostrarCarrito()
-  }
-}
-
-function decrementarCantidad(event) {
-  const productoId = parseInt(event.target.dataset.id);
-  const productoEnCarrito = carrito.find((producto) => producto.id === productoId)
-
-  if (productoEnCarrito && productoEnCarrito.cantidad > 1) {
-      productoEnCarrito.cantidad -= 1
+  if (productoEnCarrito && productoEnCarrito.cantidad + cantidad >= 1) {
+      productoEnCarrito.cantidad += cantidad
       guardarCarritoEnStorage()
       mostrarContadorCarrito()
       mostrarCarrito()
@@ -208,22 +197,27 @@ function guardarCarritoEnStorage() {
     localStorage.setItem('carrito', JSON.stringify(carrito))
 }
 
+// Agregar evento al botón de finalizar compra
+let btnFinalizarCompra = document.getElementById('btnFinalizarCompra')
+btnFinalizarCompra.addEventListener('click', finalizarCompra)
+
 // Vaciar el carrito y el localStorage
 function finalizarCompra() {
+    
     carrito = []
     localStorage.removeItem('carrito')
 
     AvisoFinalizarCompra()
     cerrarModalCarrito()
+    mostrarContadorCarrito()
 }
 
 // Mostrar los productos y el carrito inicialmente
 cargarProductos()
 mostrarCarrito()
+mostrarContadorCarrito()
 
-// Agregar evento al botón de finalizar compra
-const btnFinalizarCompra = document.getElementById('btnFinalizarCompra')
-btnFinalizarCompra.addEventListener('click', finalizarCompra)
+
 
 
 //Funcion para mostrar las secciones de la pagina cuando se haga click en cada boton de navegacion.
@@ -277,7 +271,7 @@ function avisoAgregado(){
       background: "linear-gradient(to right, #F0A00C, #D8AD5C)",
     },
     duration: 2000
-  }).showToast();
+  }).showToast()
 }
 
 function avisoEliminado(){
@@ -289,7 +283,7 @@ function avisoEliminado(){
       background: "linear-gradient(to right, #F60E07, #F1534E)",
     },
     duration: 2000
-  }).showToast();
+  }).showToast()
 }
 
 function AvisoFinalizarCompra(){
